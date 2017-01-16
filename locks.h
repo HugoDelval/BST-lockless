@@ -1,4 +1,4 @@
-#define LOCKTYP     1
+#define LOCKTYP     2
 
 #if    LOCKTYP == 0
 
@@ -17,6 +17,17 @@ volatile INT64 *lock = (INT64*)ALIGNED_MALLOC(sizeof(INT64), lineSz);
 #define END()
 #define ACQUIRE()  while(InterlockedExchange(lock, 1)){ \
                          while(*lock == 1){_mm_pause();}} 
+#define RELEASE()  *lock = 0;
+
+#elif  LOCKTYP == 2
+
+volatile INT64 *lock = (INT64*)ALIGNED_MALLOC(sizeof(INT64), lineSz);
+
+#define LOCKSTR    "HLE TATAS optimistic lock"
+#define INIT()     *lock = 0;
+#define END()
+#define ACQUIRE()  while(_InterlockedExchangeAdd_HLEAcquire(lock, 1)){ \
+                         while(*lock){_mm_pause();}}
 #define RELEASE()  *lock = 0;
 
 #endif
