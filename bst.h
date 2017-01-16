@@ -33,8 +33,9 @@ public:
 	inline BST(){root = NULL; numberOfNodes = 0;}
 
 	inline int add (Node *n) {
+		int res;
 		ACQUIRE();
-		int res = 1;
+		res = 1;
 		Node **pp = (Node**)&root;
 		Node *p = root;
 		while (p) {
@@ -58,9 +59,10 @@ public:
 	}
 
 	inline Node* remove(INT64 key) {
+		Node *p;
 		ACQUIRE();
 		Node **pp = (Node**)&root;
-		Node *p = root;
+		p = root;
 		while (p) {
 			if (key < p->key) {
 				pp = (Node**)&p->left;
