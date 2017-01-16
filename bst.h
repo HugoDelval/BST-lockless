@@ -56,6 +56,7 @@ public:
 			} else if (n->key > p->key) {
 				pp = (Node**)&p->right;
 			} else {
+				RELEASE();
 				return 0;
 			}
 			p = *pp;
