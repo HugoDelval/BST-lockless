@@ -78,8 +78,8 @@ WORKER worker(void *vthread)
             	// cout << "Adding " << key << endl;
             	bst->add(new Node(key));
             }else{
-            	bst->remove(key);
             	// cout << "Removing " << key << endl;
+            	bst->remove(key);
             }
         }
         n += NOPS;
