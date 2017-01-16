@@ -36,7 +36,7 @@ volatile INT64 *lock = (INT64*)ALIGNED_MALLOC(sizeof(INT64), lineSz);
 
 #define TRANSACTION 0
 #define LOCK        1
-#define MAXATTEMPT  5
+#define MAXATTEMPT  2
 
 #define LOCKSTR     "RTM with non-transactionnal path using TATAS lock"
 #define INIT()
