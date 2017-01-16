@@ -7,7 +7,7 @@ using namespace std;                            // cout
 
 #define COUNTER64
 #define NOPS        100
-#define NSECONDS    2                           // run each test for NSECONDS
+#define NSECONDS    4                           // run each test for NSECONDS
 
 #ifdef COUNTER64
 #define VINT    UINT64                          //  64 bit counter
@@ -28,7 +28,6 @@ int maxThread;                                  // max # of threads
 THREADH *threadH;                               // thread handles
 UINT64 *ops;                                    // for ops per thread
 BST *bst;
-const int KEY_RANGE = 4096;
 
 
 typedef struct {
