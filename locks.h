@@ -30,4 +30,33 @@ volatile INT64 *lock = (INT64*)ALIGNED_MALLOC(sizeof(INT64), lineSz);
                          while(*lock){_mm_pause();}}
 #define RELEASE()  _Store_HLERelease(lock, 0);
 
+#elif LOCKTYP == 3
+
+#define TRANSACTION 0
+#define LOCK        1
+
+#define LOCKSTR     "RTM with non-transactionnal path using TATAS lock"
+#define INIT()
+
+#define ACQUIRE()   int state = TRANSACTION;int attempt = 1;while (1) { \
+                        UINT status =_XBEGIN_STARTED; \
+                        if (state == TRANSACTION) { status = _xbegin();} \
+                        else { \
+                        	while (InterlockedExchange(lock, 1)) { \
+                        		do {_mm_pause();}while (*lock); \
+                        }} \
+                        if (status == _XBEGIN_STARTED) { \
+                        	if (state == TRANSACTION && lock){_xabort(0xA0);}
+#define RELEASE() 			if (state == TRANSACTION) { _xend(); } \
+                        	else{ *lock = 0; }break;
+              			}else{ \
+              				if(lock) { do { _mm_pause(); }while(lock); } \
+              				else{ \
+              					volatile UINT64 wait = attempt << 4; \
+              					while (wait--); \
+              				} \
+              				if (++attempt >= MAXATTEMPT) { state = LOCK; } \
+              			} \
+              		} \
+
 #endif

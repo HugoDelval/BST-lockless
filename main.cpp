@@ -71,7 +71,7 @@ WORKER worker(void *vthread)
         for(int i=0; i<NOPS ; ++i){
         	randomNumber = rand(randomNumber);
             addOperation = randomNumber & 1;
-            key = (randomNumber >> 1) & (keyRange-1); // % keyRange;
+            key = (randomNumber >> 1) & (keyRange-1); // <=> % keyRange;
             // cout << randomNumber << endl;
             // cout << (randomNumber>>1) << endl;
             if(addOperation){

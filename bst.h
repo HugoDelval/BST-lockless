@@ -32,22 +32,9 @@ public:
 	
 	inline BST(){root = NULL; numberOfNodes = 0;}
 
-	inline int contains(INT64 key){
-		Node *p = root;
-		while(p){
-			if(key < p->key){
-				p = p->left;
-			}else if(key > p->key){
-				p = p->right;
-			}else{
-				return 1;
-			}
-		}
-		return 0;
-	}
-
 	inline int add (Node *n) {
 		ACQUIRE();
+		int res = 1;
 		Node **pp = (Node**)&root;
 		Node *p = root;
 		while (p) {
@@ -56,15 +43,18 @@ public:
 			} else if (n->key > p->key) {
 				pp = (Node**)&p->right;
 			} else {
-				RELEASE();
-				return 0;
+				res = 0;
+				break;
 			}
 			p = *pp;
 		}
-		*pp = n;
+		if(res == 1){
+			*pp = n;
+		}
 		RELEASE();
-		InterlockedIncrement64(&numberOfNodes); // to check for memory leak
-		return 1;
+		if(res == 1)
+			InterlockedIncrement64(&numberOfNodes); // to check for memory leak
+		return res;
 	}
 
 	inline Node* remove(INT64 key) {
@@ -81,37 +71,36 @@ public:
 			}
 			p = *pp;
 		}
-		if (p == NULL){
-			RELEASE();
-			return NULL;
-		}
-		if (p->left == NULL && p->right == NULL) {
-			*pp = NULL;
-		} else if (p->left == NULL) {
-			*pp = p->right;
-		} else if (p->right == NULL) {
-			*pp = p->left;
-		} else {
-			Node *r = p->right;
-			Node **ppr = (Node**)&p->right;
-			while (r->left) {
-				ppr = (Node**)&r->left;
-				r = r->left;
+		if (p != NULL){		
+			if (p->left == NULL && p->right == NULL) {
+				*pp = NULL;
+			} else if (p->left == NULL) {
+				*pp = p->right;
+			} else if (p->right == NULL) {
+				*pp = p->left;
+			} else {
+				Node *r = p->right;
+				Node **ppr = (Node**)&p->right;
+				while (r->left) {
+					ppr = (Node**)&r->left;
+					r = r->left;
+				}
+				p->key = r->key;
+				p = r;
+				*ppr = r->right;
 			}
-			p->key = r->key;
-			p = r;
-			*ppr = r->right;
 		}
 		RELEASE();
-		InterlockedExchangeAdd64(&numberOfNodes, -1); // to check for memory leak
+		if (p != NULL)
+			InterlockedExchangeAdd64(&numberOfNodes, -1); // to check for memory leak
 		return p;
 	}
 	
 	inline void prefill(UINT64 keyRange){
 		UINT64 randomNumber = getWallClockMS();
-		for(int i=0 ; i<(keyRange*2.1)/3 ; ++i){ // ~50%
+		for(int i=0 ; i<(keyRange*2.1)/3 ; ++i){ // tree filled at ~50% 
 			randomNumber = rand(randomNumber);
-			INT64 key = (randomNumber >> 1) & (keyRange-1); // % keyRange;
+			INT64 key = (randomNumber >> 1) & (keyRange-1); // <=> % keyRange;
 			add(new Node(key));
 		}
 		// percentage filled :
@@ -120,7 +109,7 @@ public:
 
 
 	/***********************************************************
-	** following functions are used to check tree constitency **
+	** following functions are used to check tree consistency **
 	***********************************************************/ 
 	
 	inline UINT64 countNbOfNodes(Node* start) {
