@@ -37,7 +37,6 @@
 //
 // determine if 32 or 64 bit version
 //
-#define _WIN64
 #ifdef WIN32
 #ifdef _WIN64                   // 64 bit windows
 #define X64
