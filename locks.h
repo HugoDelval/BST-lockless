@@ -48,7 +48,7 @@ volatile INT64 *lock = (INT64*)ALIGNED_MALLOC(sizeof(INT64), lineSz);
                         if (status == _XBEGIN_STARTED) { \
                         	if (state == TRANSACTION && lock){_xabort(0xA0);}
 #define RELEASE() 			if (state == TRANSACTION) { _xend(); } \
-                        	else{ *lock = 0; }break;
+                        	else{ *lock = 0; }break; \
               			}else{ \
               				if(lock) { do { _mm_pause(); }while(lock); } \
               				else{ \
