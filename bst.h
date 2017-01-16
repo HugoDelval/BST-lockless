@@ -47,6 +47,7 @@ public:
 	}
 
 	inline int add (Node *n) {
+		ACQUIRE();
 		Node **pp = (Node**)&root;
 		Node *p = root;
 		while (p) {
@@ -60,11 +61,13 @@ public:
 			p = *pp;
 		}
 		*pp = n;
+		RELEASE();
 		InterlockedIncrement64(&numberOfNodes); // to check for memory leak
 		return 1;
 	}
 
 	inline Node* remove(INT64 key) {
+		ACQUIRE();
 		Node **pp = (Node**)&root;
 		Node *p = root;
 		while (p) {
@@ -96,6 +99,7 @@ public:
 			p = r;
 			*ppr = r->right;
 		}
+		RELEASE();
 		InterlockedExchangeAdd64(&numberOfNodes, -1); // to check for memory leak
 		return p;
 	}

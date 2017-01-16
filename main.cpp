@@ -76,13 +76,9 @@ WORKER worker(void *vthread)
             // cout << (randomNumber>>1) << endl;
             if(addOperation){
             	// cout << "Adding " << key << endl;
-            	ACQUIRE();
             	bst->add(new Node(key));
-            	RELEASE();
             }else{
-            	ACQUIRE();
             	bst->remove(key);
-            	RELEASE();
             	// cout << "Removing " << key << endl;
             }
         }
