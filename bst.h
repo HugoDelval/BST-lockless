@@ -81,8 +81,10 @@ public:
 			}
 			p = *pp;
 		}
-		if (p == NULL)
+		if (p == NULL){
+			RELEASE();
 			return NULL;
+		}
 		if (p->left == NULL && p->right == NULL) {
 			*pp = NULL;
 		} else if (p->left == NULL) {

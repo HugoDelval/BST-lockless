@@ -26,8 +26,8 @@ volatile INT64 *lock = (INT64*)ALIGNED_MALLOC(sizeof(INT64), lineSz);
 #define LOCKSTR    "HLE TATAS optimistic lock"
 #define INIT()     *lock = 0;
 #define END()
-#define ACQUIRE()  while(_InterlockedExchangeAdd64_HLEAcquire(lock, 1)){ \
+#define ACQUIRE()  while(_InterlockedExchange_HLEAcquire(lock, 1)){ \
                          while(*lock){_mm_pause();}}
-#define RELEASE()  _Store64_HLERelease(lock, 0);
+#define RELEASE()  _Store_HLERelease(lock, 0);
 
 #endif
