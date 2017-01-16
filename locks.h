@@ -40,6 +40,7 @@ volatile INT64 *lock = (INT64*)ALIGNED_MALLOC(sizeof(INT64), lineSz);
 
 #define LOCKSTR     "RTM with non-transactionnal path using TATAS lock"
 #define INIT()
+#define END()
 
 #define ACQUIRE()   int state = TRANSACTION;int attempt = 1;while (1) { \
                         UINT status =_XBEGIN_STARTED; \
