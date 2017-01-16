@@ -27,7 +27,7 @@ volatile INT64 *lock = (INT64*)ALIGNED_MALLOC(sizeof(INT64), lineSz);
 #define INIT()     *lock = 0;
 #define END()
 #define ACQUIRE()  while(_InterlockedExchangeAdd64_HLEAcquire(lock, 1)){ \
-                         while(*lock >= 1){_mm_pause();}}
+                         while(*lock){_mm_pause();}}
 #define RELEASE()  _Store_HLERelease(&lock, 0);
 
 #endif
