@@ -32,6 +32,8 @@ volatile INT64 *lock = (INT64*)ALIGNED_MALLOC(sizeof(INT64), lineSz);
 
 #elif LOCKTYP == 3
 
+volatile INT64 *lock = (INT64*)ALIGNED_MALLOC(sizeof(INT64), lineSz);
+
 #define TRANSACTION 0
 #define LOCK        1
 
@@ -46,11 +48,11 @@ volatile INT64 *lock = (INT64*)ALIGNED_MALLOC(sizeof(INT64), lineSz);
                         		do {_mm_pause();}while (*lock); \
                         }} \
                         if (status == _XBEGIN_STARTED) { \
-                        	if (state == TRANSACTION && lock){_xabort(0xA0);}
+                        	if (state == TRANSACTION && *lock){_xabort(0xA0);}
 #define RELEASE() 			if (state == TRANSACTION) { _xend(); } \
                         	else{ *lock = 0; }break; \
               			}else{ \
-              				if(lock) { do { _mm_pause(); }while(lock); } \
+              				if(*lock) { do { _mm_pause(); }while(*lock); } \
               				else{ \
               					volatile UINT64 wait = attempt << 4; \
               					while (wait--); \
