@@ -64,15 +64,10 @@ WORKER worker(void *vthread)
     UINT64 key;
 	
     while (true) {
-        //
-        // do some work
-        //
         for(int i=0; i<NOPS ; ++i){
         	randomNumber = rand(randomNumber);
             addOperation = randomNumber & 1;
             key = (randomNumber >> 1) & (keyRange-1); // <=> % keyRange;
-            // cout << randomNumber << endl;
-            // cout << (randomNumber>>1) << endl;
             if(addOperation){
             	// cout << "Adding " << key << endl;
             	bst->add(new Node(key));
@@ -95,10 +90,6 @@ WORKER worker(void *vthread)
 }
 
 
-
-//
-// main
-//
 int main()
 {
     ncpu = getNumberOfCPUs();   // number of logical CPUs
@@ -147,7 +138,7 @@ int main()
 
     cout << setw(4) << "--";        // nt
     cout << setw(6) << "--";        // rt
-    cout << setw(13) << "---";      // ops
+    cout << setw(13) << "---------";      // ops
     cout << setw(12) << "---";      // kr
     cout << endl;
 
@@ -156,7 +147,6 @@ int main()
     //
     // run tests
     //
-    // maxThread = 2; // for testing
     for (int nt = 1; nt <= maxThread; nt *= 2, indx++) {
     	cout << endl;
     	for(int keyRange=16 ; keyRange < 1048577 ; keyRange *= 16){
