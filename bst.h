@@ -59,7 +59,7 @@ public:
 	}
 
 	inline Node* remove(INT64 key) {
-		Node *p;
+		Node *p = NULL;
 		ACQUIRE();
 		Node **pp = (Node**)&root;
 		p = root;
@@ -140,14 +140,14 @@ public:
 				cout << start->right->key << " is on the right of " << start->key << endl;
 				return false;
 			}
-			right &= treeOrderConsistent(start->right);
+			right = right && treeOrderConsistent(start->right);
 		}
 		if(start->left != NULL){
 			if(start->left->key >= start->key){
 				cout << start->left->key << " is on the right of " << start->key << endl;
 				return false;
 			}
-			left &= treeOrderConsistent(start->left);
+			left = left && treeOrderConsistent(start->left);
 		}
 		return right && left;
 	}
