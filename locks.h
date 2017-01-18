@@ -36,7 +36,7 @@ volatile INT64 *lock = (INT64*)ALIGNED_MALLOC(sizeof(INT64), lineSz);
 
 #define TRANSACTION 0
 #define LOCK        1
-#define MAXATTEMPT  2
+#define MAXATTEMPT  4
 
 #define LOCKSTR     "RTM with non-transactionnal path using TATAS lock"
 #define INIT()
@@ -56,7 +56,7 @@ volatile INT64 *lock = (INT64*)ALIGNED_MALLOC(sizeof(INT64), lineSz);
               			}else{ \
               				if(*lock) { do { _mm_pause(); }while(*lock); } \
               				else{ \
-              					volatile UINT64 wait = attempt << 4; \
+              					volatile UINT64 wait = attempt << 2; \
               					while (wait--); \
               				} \
               				if (++attempt >= MAXATTEMPT) { state = LOCK; } \
