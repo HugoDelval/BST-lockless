@@ -195,7 +195,7 @@ int main()
 	    	
 	        cout << setw(4) << nt;
 	        cout << setw(6) << fixed << setprecision(2) << (double) rt / 1000;
-	        cout << setw(13) << setprecision(3) << r[indx].ops / 4000000.0;
+	        cout << setw(13) << setprecision(2) << r[indx].ops / 4000000.0;
 	        cout << setw(12) << keyRange;
 
 	        //
