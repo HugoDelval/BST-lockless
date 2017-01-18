@@ -53,8 +53,8 @@ public:
 			*pp = n;
 		}
 		RELEASE();
-		// if(res == 1)
-		// 	InterlockedIncrement64(&numberOfNodes); // to check for memory leak
+		if(res == 1)
+			InterlockedIncrement64(&numberOfNodes); // to check for memory leak
 		return res;
 	}
 
@@ -93,8 +93,8 @@ public:
 			}
 		}
 		RELEASE();
-		// if (p != NULL)
-		// 	InterlockedExchangeAdd64(&numberOfNodes, -1); // to check for memory leak
+		if (p != NULL)
+			InterlockedExchangeAdd64(&numberOfNodes, -1); // to check for memory leak
 		return p;
 	}
 	
@@ -153,11 +153,11 @@ public:
 	}
 
 	inline bool treeIsConsistent(){
-		// UINT64 countedNbOfNodes = countNbOfNodes(root);
-		// if(countedNbOfNodes != numberOfNodes){
-		// 	cout << "(countNbOfNodes(root) = " << countedNbOfNodes << ") != (numberOfNodes = " << numberOfNodes << ")" << endl;
-		// 	return false;
-		// }
+		UINT64 countedNbOfNodes = countNbOfNodes(root);
+		if(countedNbOfNodes != numberOfNodes){
+			cout << "(countNbOfNodes(root) = " << countedNbOfNodes << ") != (numberOfNodes = " << numberOfNodes << ")" << endl;
+			return false;
+		}
 		return treeOrderConsistent(root);
 	}
 

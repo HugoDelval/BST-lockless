@@ -1,3 +1,5 @@
 bst
 bst-with-tcmalloc
 *.pdf
+*.odt*
+*.ods*
